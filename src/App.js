@@ -122,7 +122,9 @@ function UserCard({ user }) {
             <CardMeta>
               <span className="date">{user.location}</span>
             </CardMeta>
-            <CardDescription>{user.bio}</CardDescription>
+            <CardDescription style={{ color: user.bio ? "" : "lightgrey" }}>
+              {user.bio || "No bio available."}
+            </CardDescription>
           </CardContent>
           <CardContent extra>
             <Icon name="user" />
