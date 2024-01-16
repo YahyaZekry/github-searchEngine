@@ -21,22 +21,35 @@ async function handleSearch(username) {
     const response = await fetch(`${API_URL}/search/users?q=${username}`);
     const json = await response.json();
     console.log(json);
-    return json.items || [];
+
+    // Fetch detailed information for each user
+    const detailedUserPromises = json.items.map(async (user) => {
+      const userDetailsResponse = await fetch(`${API_URL}/users/${user.login}`);
+      const userDetails = await userDetailsResponse.json();
+      console.log(userDetails);
+      return userDetails;
+    });
+
+    // Wait for all user details requests to complete
+    const detailedUsers = await Promise.all(detailedUserPromises);
+
+    console.log(detailedUsers);
+    return detailedUsers || [];
   } catch (e) {
     throw new Error(e);
   }
 }
 
-async function handleUserDetails(username) {
-  try {
-    const response = await fetch(`${API_URL}/users/${username}`);
-    const data = await response.json();
-    console.log(data);
-    return data || {};
-  } catch (e) {
-    throw new Error(e);
-  }
-}
+// async function handleUserDetails(username) {
+//   try {
+//     const response = await fetch(`${API_URL}/users/${username}`);
+//     const data = await response.json();
+//     console.log(data);
+//     return data || {};
+//   } catch (e) {
+//     throw new Error(e);
+//   }
+// }
 
 export default function App() {
   const [username, setUsername] = useState("");
@@ -50,7 +63,7 @@ export default function App() {
   async function onSearchSubmit(e) {
     e.preventDefault();
     const results = await handleSearch(username);
-    const userDetails = await handleUserDetails(username);
+    // const userDetails = await handleUserDetails(username);
     setResults(results);
     setUserDetails(userDetails);
   }
@@ -105,7 +118,7 @@ function UserCard({ user }) {
         <Card>
           <Image src={user.avatar_url} wrapped ui={false} />
           <CardContent>
-            <CardHeader>{user.login}</CardHeader>
+            <CardHeader>{user.name || user.login}</CardHeader>
             <CardMeta>
               <span className="date">{user.location}</span>
             </CardMeta>
