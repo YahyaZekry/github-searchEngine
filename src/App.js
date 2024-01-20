@@ -40,21 +40,9 @@ async function handleSearch(username) {
   }
 }
 
-// async function handleUserDetails(username) {
-//   try {
-//     const response = await fetch(`${API_URL}/users/${username}`);
-//     const data = await response.json();
-//     console.log(data);
-//     return data || {};
-//   } catch (e) {
-//     throw new Error(e);
-//   }
-// }
-
 export default function App() {
   const [username, setUsername] = useState("");
   const [results, setResults] = useState([]);
-  const [userDetails, setUserDetails] = useState([]);
 
   function onSearchChange(e) {
     setUsername(e.target.value);
@@ -63,9 +51,7 @@ export default function App() {
   async function onSearchSubmit(e) {
     e.preventDefault();
     const results = await handleSearch(username);
-    // const userDetails = await handleUserDetails(username);
     setResults(results);
-    setUserDetails(userDetails);
   }
 
   return (
@@ -79,7 +65,7 @@ export default function App() {
         value={username}
       />
 
-      <UserList results={results} userDetails={userDetails} />
+      <UserList results={results} />
     </div>
   );
 }
