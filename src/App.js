@@ -16,24 +16,25 @@ import "./App.css";
 
 const API_URL = "https://api.github.com";
 
-async function handleSearch(username) {
+// Function to handle the search for GitHub users by username, limited to 10 items
+async function handleSearch(username, page = 1) {
   try {
-    const response = await fetch(`${API_URL}/search/users?q=${username}`);
+    // Fetch the search results from GitHub API
+    const response = await fetch(
+      `${API_URL}/search/users?q=${username}&per_page=10&page=${page}`
+    );
     const json = await response.json();
-    console.log(json);
 
     // Fetch detailed information for each user
     const detailedUserPromises = json.items.map(async (user) => {
       const userDetailsResponse = await fetch(`${API_URL}/users/${user.login}`);
       const userDetails = await userDetailsResponse.json();
-      console.log(userDetails);
       return userDetails;
     });
 
     // Wait for all user details requests to complete
     const detailedUsers = await Promise.all(detailedUserPromises);
 
-    console.log(detailedUsers);
     return detailedUsers || [];
   } catch (e) {
     throw new Error(e);
@@ -41,19 +42,29 @@ async function handleSearch(username) {
 }
 
 export default function App() {
+  // State to store the username input by the user
   const [username, setUsername] = useState("");
+
+  // State to store the search results
   const [results, setResults] = useState([]);
+
+  const [page, setPage] = useState(1);
 
   function onSearchChange(e) {
     setUsername(e.target.value);
   }
 
   async function onSearchSubmit(e) {
-    e.preventDefault();
-    const results = await handleSearch(username);
+    const results = await handleSearch(username, page);
     setResults(results);
   }
 
+  function onNextPage() {
+    setPage((prevPage) => prevPage + 1);
+    onSearchSubmit();
+  }
+
+  // Render the main UI of the App
   return (
     <div className="app">
       <div class="navbar">
@@ -63,6 +74,7 @@ export default function App() {
         onChange={onSearchChange}
         onSubmit={onSearchSubmit}
         value={username}
+        onNextPage={onNextPage}
       />
 
       <UserList results={results} />
@@ -70,7 +82,7 @@ export default function App() {
   );
 }
 
-function SearchForm({ onSubmit, onChange, value }) {
+function SearchForm({ onSubmit, onChange, value, onNextPage }) {
   return (
     <div className="search-form">
       <Form onSubmit={onSubmit}>
@@ -81,6 +93,7 @@ function SearchForm({ onSubmit, onChange, value }) {
             placeholder="Enter GitHub username"
           />
           <FormButton content="Search" />
+          <FormButton onClick={onNextPage}>Next</FormButton>
         </FormGroup>
       </Form>
     </div>
@@ -88,6 +101,7 @@ function SearchForm({ onSubmit, onChange, value }) {
 }
 
 function UserList({ results }) {
+  console.log(results);
   return (
     <div className="list">
       {results.map((user) => (
