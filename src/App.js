@@ -1,17 +1,7 @@
 import React, { useState } from "react";
-import {
-  Form,
-  FormInput,
-  FormGroup,
-  FormButton,
-  Card,
-  CardContent,
-  CardMeta,
-  CardHeader,
-  CardDescription,
-  Image,
-  Icon,
-} from "semantic-ui-react";
+import SearchForm from "./components/SearchForm";
+import UserList from "./components/UserList";
+import PageNavigation from "./components/PageNavigation";
 import "./App.css";
 
 const API_URL = "https://api.github.com";
@@ -71,7 +61,7 @@ export default function App() {
   // Render the main UI of the App
   return (
     <div className="app">
-      <div class="navbar">
+      <div className="navbar">
         <h3>Github User Search Engine</h3>
       </div>
       <SearchForm
@@ -81,70 +71,12 @@ export default function App() {
       />
 
       <UserList results={results} />
-      {results.length > 0 ? (
-        <PageNavigation onPrevPage={onPrevPage} onNextPage={onNextPage} />
-      ) : null}
-    </div>
-  );
-}
-
-function SearchForm({ onSubmit, onChange, value }) {
-  return (
-    <div className="search-form">
-      <Form onSubmit={onSubmit}>
-        <FormGroup>
-          <FormInput
-            value={value}
-            onChange={onChange}
-            placeholder="Enter GitHub username"
-          />
-          <FormButton content="Search" />
-        </FormGroup>
-      </Form>
-    </div>
-  );
-}
-
-function UserList({ results }) {
-  return (
-    <div className="list">
-      {results.map((user) => (
-        <UserCard key={user.id} user={user} />
-      ))}
-    </div>
-  );
-}
-
-function UserCard({ user }) {
-  return (
-    <>
-      <div className="card">
-        <Card>
-          <Image src={user.avatar_url} wrapped ui={false} />
-          <CardContent>
-            <CardHeader>{user.name || user.login}</CardHeader>
-            <CardMeta>
-              <span className="date">{user.location}</span>
-            </CardMeta>
-            <CardDescription style={{ color: user.bio ? "" : "lightgrey" }}>
-              {user.bio || "No bio available."}
-            </CardDescription>
-          </CardContent>
-          <CardContent extra>
-            <Icon name="user" />
-            {user.followers} followers
-          </CardContent>
-        </Card>
-      </div>
-    </>
-  );
-}
-
-function PageNavigation(page, results, onPrevPage, onNextPage) {
-  return (
-    <div className="pageNavigation">
-      {page > 1 && <button onClick={onPrevPage}>Previous</button>}
-      <FormButton onClick={onNextPage}>Next</FormButton>
+      <PageNavigation
+        onPrevPage={onPrevPage}
+        onNextPage={onNextPage}
+        page={page}
+        results={results}
+      />
     </div>
   );
 }
