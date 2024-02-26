@@ -16,12 +16,12 @@ import "./App.css";
 
 const API_URL = "https://api.github.com";
 
-// Function to handle the search for GitHub users by username, limited to 10 items
+// Function to handle the search for GitHub users by username, limited to 5 items for testing purpose
 async function handleSearch(username, page = 1) {
   try {
     // Fetch the search results from GitHub API
     const response = await fetch(
-      `${API_URL}/search/users?q=${username}&per_page=10&page=${page}`
+      `${API_URL}/search/users?q=${username}&per_page=5&page=${page}`
     );
     const json = await response.json();
 
@@ -64,6 +64,10 @@ export default function App() {
     onSearchSubmit();
   }
 
+  function onPrevPage() {
+    setPage((prevPage) => prevPage - 1);
+    onSearchSubmit();
+  }
   // Render the main UI of the App
   return (
     <div className="app">
@@ -74,15 +78,17 @@ export default function App() {
         onChange={onSearchChange}
         onSubmit={onSearchSubmit}
         value={username}
-        onNextPage={onNextPage}
       />
 
       <UserList results={results} />
+      {results.length > 0 ? (
+        <PageNavigation onPrevPage={onPrevPage} onNextPage={onNextPage} />
+      ) : null}
     </div>
   );
 }
 
-function SearchForm({ onSubmit, onChange, value, onNextPage }) {
+function SearchForm({ onSubmit, onChange, value }) {
   return (
     <div className="search-form">
       <Form onSubmit={onSubmit}>
@@ -93,7 +99,6 @@ function SearchForm({ onSubmit, onChange, value, onNextPage }) {
             placeholder="Enter GitHub username"
           />
           <FormButton content="Search" />
-          <FormButton onClick={onNextPage}>Next</FormButton>
         </FormGroup>
       </Form>
     </div>
@@ -101,7 +106,6 @@ function SearchForm({ onSubmit, onChange, value, onNextPage }) {
 }
 
 function UserList({ results }) {
-  console.log(results);
   return (
     <div className="list">
       {results.map((user) => (
@@ -133,5 +137,14 @@ function UserCard({ user }) {
         </Card>
       </div>
     </>
+  );
+}
+
+function PageNavigation(page, results, onPrevPage, onNextPage) {
+  return (
+    <div className="pageNavigation">
+      {page > 1 && <button onClick={onPrevPage}>Previous</button>}
+      <FormButton onClick={onNextPage}>Next</FormButton>
+    </div>
   );
 }
