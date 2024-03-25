@@ -44,19 +44,25 @@ export default function App() {
     setUsername(e.target.value);
   }
 
-  async function onSearchSubmit(e) {
+  async function onSearchSubmit(page) {
     const results = await handleSearch(username, page);
     setResults(results);
   }
 
   function onNextPage() {
-    setPage((prevPage) => prevPage + 1);
-    onSearchSubmit();
+    setPage((prevPage) => {
+      const newPage = prevPage + 1;
+      onSearchSubmit(newPage);
+      return newPage;
+    });
   }
 
   function onPrevPage() {
-    setPage((prevPage) => prevPage - 1);
-    onSearchSubmit();
+    setPage((prevPage) => {
+      const newPage = prevPage - 1;
+      onSearchSubmit(newPage);
+      return newPage;
+    });
   }
   // Render the main UI of the App
   return (
