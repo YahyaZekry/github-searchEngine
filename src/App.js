@@ -40,13 +40,24 @@ export default function App() {
 
   const [page, setPage] = useState(1);
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   function onSearchChange(e) {
     setUsername(e.target.value);
   }
 
   async function onSearchSubmit(page) {
-    const results = await handleSearch(username, page);
-    setResults(results);
+    setLoading(true);
+    setError("");
+    try {
+      const results = await handleSearch(username, page);
+      setResults(results);
+    } catch (e) {
+      setError("Failed to fetch users. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   function onNextPage() {
@@ -75,7 +86,8 @@ export default function App() {
         onSubmit={onSearchSubmit}
         value={username}
       />
-
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
       <UserList results={results} />
       <PageNavigation
         onPrevPage={onPrevPage}

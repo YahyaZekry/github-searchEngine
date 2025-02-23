@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, FormInput, FormGroup, FormButton } from "semantic-ui-react";
 
-function SearchForm({ onSubmit, onChange, value }) {
+function SearchForm({ onSubmit = () => {}, onChange = () => {}, value = "" }) {
   return (
     <div className="search-form">
       <Form onSubmit={onSubmit}>
