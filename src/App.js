@@ -80,6 +80,7 @@ export default function App() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
 
   function onSearchChange(e) {
     setUsername(e.target.value);
@@ -150,7 +151,7 @@ export default function App() {
 
   // Render the main UI of the App
   return (
-    <div className="app-container">
+    <div className={`app-container ${darkMode ? 'dark-theme' : 'light-theme'}`} data-theme={darkMode ? "dark" : "light"}>
       {/* Animated background elements */}
       <div className="background-animations">
         <motion.div
@@ -236,6 +237,62 @@ export default function App() {
             delay: 2.5
           }}
         />
+        <motion.div
+          className="floating-element floating-7"
+          animate={{
+            y: [0, 25, 0],
+            x: [0, -10, 0],
+            rotate: [0, 15, 0],
+          }}
+          transition={{
+            duration: 4.95,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3.2
+          }}
+        />
+        <motion.div
+          className="floating-element floating-8"
+          animate={{
+            y: [0, -18, 0],
+            x: [0, 22, 0],
+            scale: [1, 0.85, 1],
+          }}
+          transition={{
+            duration: 7.65,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1.8
+          }}
+        />
+        <motion.div
+          className="floating-element floating-9"
+          animate={{
+            y: [0, 14, 0],
+            x: [0, -18, 0],
+            rotate: [0, -12, 0],
+          }}
+          transition={{
+            duration: 6.3,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2.8
+          }}
+        />
+        <motion.div
+          className="floating-element floating-10"
+          animate={{
+            y: [0, -22, 0],
+            x: [0, 12, 0],
+            scale: [1, 1.25, 1],
+          }}
+          transition={{
+            duration: 5.4,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3.5
+          }}
+        />
       </div>
 
       <motion.div
@@ -244,14 +301,33 @@ export default function App() {
         initial="hidden"
         animate="visible"
       >
-      <motion.div className="navbar" variants={itemVariants}>
-        <motion.h3
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          Github User Search Engine
-        </motion.h3>
+      <motion.div className={`navbar ${darkMode ? 'dark' : ''}`} variants={itemVariants}>
+        <div className="navbar-content">
+          <motion.h3
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Github User Search Engine
+          </motion.h3>
+          <motion.button
+            className="dark-mode-toggle"
+            onClick={() => setDarkMode(!darkMode)}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: 0.5 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              position: 'absolute',
+              right: '20px',
+              top: '50%',
+              transform: 'translateY(-50%)'
+            }}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </motion.button>
+        </div>
       </motion.div>
 
       <motion.div variants={itemVariants}>
