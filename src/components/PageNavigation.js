@@ -1,11 +1,19 @@
 import React from "react";
 import { FormButton } from "semantic-ui-react";
 
-function PageNavigation({ page, results, onPrevPage, onNextPage }) {
+function PageNavigation({ page = 1, results = [], hasNextPage = false, onPrevPage = () => {}, onNextPage = () => {} }) {
+  const showPrevButton = page > 1;
+  const showNextButton = hasNextPage && results.length > 0;
+
+  // Don't render the container if no buttons are shown
+  if (!showPrevButton && !showNextButton) {
+    return null;
+  }
+
   return (
     <div className="pageNavigation">
-      {page > 1 && <FormButton onClick={onPrevPage}>Previous</FormButton>}
-      {results.length > 0 && <FormButton onClick={onNextPage}>Next</FormButton>}
+      {showPrevButton && <FormButton onClick={onPrevPage}>Previous</FormButton>}
+      {showNextButton && <FormButton onClick={onNextPage}>Next</FormButton>}
     </div>
   );
 }
