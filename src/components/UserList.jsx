@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import UserCard from "./UserCard";
+import UserCard from "./UserCard.jsx";
 
 function UserList({ results }) {
   const containerVariants = {

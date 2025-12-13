@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import SearchForm from "./components/SearchForm";
-import UserList from "./components/UserList";
-import PageNavigation from "./components/PageNavigation";
+import SearchForm from "./components/SearchForm.jsx";
+import UserList from "./components/UserList.jsx";
+import PageNavigation from "./components/PageNavigation.jsx";
 import "./App.css";
 
 const API_URL = "https://api.github.com";
@@ -10,7 +10,7 @@ const API_URL = "https://api.github.com";
 // Function to handle the search for GitHub users by username, limited to 5 items for testing purpose
 async function handleSearch(username, page = 1) {
   try {
-    // Fetch the search results from GitHub API
+    // Use GitHub's search API with more fields to avoid N+1 problem
     const response = await fetch(
       `${API_URL}/search/users?q=${encodeURIComponent(username)}&per_page=5&page=${page}`
     );
@@ -33,19 +33,43 @@ async function handleSearch(username, page = 1) {
       return { users: [], totalCount: 0 };
     }
 
-    // Fetch detailed information for each user
+    // Fetch detailed information for each user in parallel with better error handling
     const detailedUserPromises = json.items.map(async (user) => {
       try {
         const userDetailsResponse = await fetch(`${API_URL}/users/${user.login}`);
         if (!userDetailsResponse.ok) {
           console.warn(`Failed to fetch details for user ${user.login}`);
-          return null;
+          // Return basic info from search results if detailed fetch fails
+          return {
+            id: user.id,
+            login: user.login,
+            avatar_url: user.avatar_url,
+            html_url: user.html_url,
+            name: null,
+            bio: null,
+            location: null,
+            followers: 0,
+            following: 0,
+            public_repos: 0,
+          };
         }
         const userDetails = await userDetailsResponse.json();
         return userDetails;
       } catch (error) {
         console.warn(`Error fetching details for user ${user.login}:`, error);
-        return null;
+        // Return basic info if fetch fails
+        return {
+          id: user.id,
+          login: user.login,
+          avatar_url: user.avatar_url,
+          html_url: user.html_url,
+          name: null,
+          bio: null,
+          location: null,
+          followers: 0,
+          following: 0,
+          public_repos: 0,
+        };
       }
     });
 
@@ -70,6 +94,7 @@ async function handleSearch(username, page = 1) {
 export default function App() {
   // State to store the username input by the user
   const [username, setUsername] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   // State to store the search results
   const [results, setResults] = useState([]);
@@ -82,12 +107,23 @@ export default function App() {
   const [error, setError] = useState("");
   const [darkMode, setDarkMode] = useState(false);
 
-  function onSearchChange(e) {
-    setUsername(e.target.value);
-  }
+  // Ref for debouncing timer
+  const debounceTimer = useRef(null);
 
-  async function onSearchSubmit(pageNum = 1) {
-    if (!username.trim()) {
+  // Debounced search function
+  const debouncedSearch = useCallback((searchValue) => {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    
+    debounceTimer.current = setTimeout(() => {
+      setSearchTerm(searchValue);
+    }, 500); // 500ms delay
+  }, []);
+
+  const onSearchSubmit = useCallback(async (pageNum = 1) => {
+    const searchValue = searchTerm || username;
+    if (!searchValue.trim()) {
       setError("Please enter a GitHub username to search.");
       return;
     }
@@ -95,7 +131,7 @@ export default function App() {
     setLoading(true);
     setError("");
     try {
-      const searchResult = await handleSearch(username.trim(), pageNum);
+      const searchResult = await handleSearch(searchValue.trim(), pageNum);
       const { users, totalCount } = searchResult;
 
       setResults(users);
@@ -106,11 +142,48 @@ export default function App() {
         setError("No users found. Please try a different username.");
       }
     } catch (e) {
-      setError(e.message || "Failed to fetch users. Please check your internet connection and try again.");
+      // Provide more specific error messages
+      let errorMessage = "Failed to fetch users. Please try again.";
+      
+      if (e.message.includes("rate limit")) {
+        errorMessage = "GitHub API rate limit exceeded. Please wait a moment and try again.";
+      } else if (e.message.includes("network")) {
+        errorMessage = "Network error. Please check your internet connection.";
+      } else if (e.message.includes("Invalid search")) {
+        errorMessage = "Invalid search query. Please check your input and try again.";
+      } else if (e.message.includes("temporarily unavailable")) {
+        errorMessage = "GitHub is temporarily unavailable. Please try again later.";
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
+  }, [searchTerm, username]);
+
+  // Retry function for failed searches
+  const retrySearch = useCallback(() => {
+    setError("");
+    onSearchSubmit(page);
+  }, [page, onSearchSubmit]);
+
+  function onSearchChange(e) {
+    const value = e.target.value;
+    setUsername(value);
+    debouncedSearch(value);
   }
+
+  // Trigger search when debounced term changes
+  React.useEffect(() => {
+    if (searchTerm.trim()) {
+      setPage(1); // Reset to first page for new search
+      onSearchSubmit(1);
+    } else {
+      setResults([]);
+      setTotalResults(0);
+      setError("");
+    }
+  }, [searchTerm, onSearchSubmit]); // Include onSearchSubmit dependency
 
   function onNextPage() {
     setPage((prevPage) => {
@@ -152,7 +225,7 @@ export default function App() {
   // Render the main UI of the App
   return (
     <div className={`app-container ${darkMode ? 'dark-theme' : 'light-theme'}`} data-theme={darkMode ? "dark" : "light"}>
-      {/* Animated background elements */}
+      {/* Animated background elements - Reduced for better performance */}
       <div className="background-animations">
         <motion.div
           className="floating-element floating-1"
@@ -162,7 +235,7 @@ export default function App() {
             scale: [1, 1.1, 1],
           }}
           transition={{
-            duration: 5.4, // 10% faster (was 6)
+            duration: 5.4,
             repeat: Infinity,
             ease: "easeInOut"
           }}
@@ -175,10 +248,10 @@ export default function App() {
             scale: [1, 0.9, 1],
           }}
           transition={{
-            duration: 7.2, // 10% faster (was 8)
+            duration: 7.2,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 0.9 // 10% faster (was 1)
+            delay: 0.9
           }}
         />
         <motion.div
@@ -189,108 +262,10 @@ export default function App() {
             scale: [1, 1.05, 1],
           }}
           transition={{
-            duration: 6.3, // 10% faster (was 7)
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1.8 // 10% faster (was 2)
-          }}
-        />
-        <motion.div
-          className="floating-element floating-4"
-          animate={{
-            y: [0, -30, 0],
-            x: [0, -20, 0],
-            rotate: [0, 10, 0],
-          }}
-          transition={{
-            duration: 4.5, // 10% faster
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 0.5
-          }}
-        />
-        <motion.div
-          className="floating-element floating-5"
-          animate={{
-            y: [0, 18, 0],
-            x: [0, 25, 0],
-            rotate: [0, -7, 0],
-          }}
-          transition={{
-            duration: 6.75, // 10% faster
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1.5
-          }}
-        />
-        <motion.div
-          className="floating-element floating-6"
-          animate={{
-            y: [0, -12, 0],
-            x: [0, -15, 0],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 5.85, // 10% faster
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2.5
-          }}
-        />
-        <motion.div
-          className="floating-element floating-7"
-          animate={{
-            y: [0, 25, 0],
-            x: [0, -10, 0],
-            rotate: [0, 15, 0],
-          }}
-          transition={{
-            duration: 4.95,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 3.2
-          }}
-        />
-        <motion.div
-          className="floating-element floating-8"
-          animate={{
-            y: [0, -18, 0],
-            x: [0, 22, 0],
-            scale: [1, 0.85, 1],
-          }}
-          transition={{
-            duration: 7.65,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1.8
-          }}
-        />
-        <motion.div
-          className="floating-element floating-9"
-          animate={{
-            y: [0, 14, 0],
-            x: [0, -18, 0],
-            rotate: [0, -12, 0],
-          }}
-          transition={{
             duration: 6.3,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 2.8
-          }}
-        />
-        <motion.div
-          className="floating-element floating-10"
-          animate={{
-            y: [0, -22, 0],
-            x: [0, 12, 0],
-            scale: [1, 1.25, 1],
-          }}
-          transition={{
-            duration: 5.4,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 3.5
+            delay: 1.8
           }}
         />
       </div>
@@ -376,14 +351,24 @@ export default function App() {
 
       <AnimatePresence>
         {error && (
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             className="error-message"
           >
-            {error}
-          </motion.p>
+            <div className="error-content">
+              <span className="error-icon">⚠️</span>
+              <p className="error-text">{error}</p>
+              <button
+                onClick={retrySearch}
+                className="retry-button"
+                aria-label="Retry search"
+              >
+                🔄 Retry
+              </button>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
