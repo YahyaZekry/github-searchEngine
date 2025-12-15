@@ -4,49 +4,174 @@ import { StyleFunctionProps } from '@chakra-ui/react'
 const theme = extendTheme({
   initialColorMode: 'light',
   useSystemColorMode: false,
+  fonts: {
+    heading: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+    body: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+  },
   colors: {
-    github: {
-      bgPrimary: '#f6f8fa',
-      bgSecondary: '#ffffff',
-      textPrimary: '#24292e',
-      textSecondary: '#586069',
-      border: '#e1e4e8',
-      accent: '#0366d6',
-      success: '#28a745',
-      warning: '#ffc107',
-      error: '#d73a49',
+    // Modern minimalist color palette
+    neutral: {
+      50: '#fafafa',
+      100: '#f5f5f5',
+      200: '#e5e5e5',
+      300: '#d4d4d4',
+      400: '#a3a3a3',
+      500: '#737373',
+      600: '#525252',
+      700: '#404040',
+      800: '#262626',
+      900: '#171717',
     },
+    brand: {
+      50: '#f0f9ff',
+      100: '#e0f2fe',
+      200: '#bae6fd',
+      300: '#7dd3fc',
+      400: '#38bdf8',
+      500: '#0ea5e9',
+      600: '#0284c7',
+      700: '#0369a1',
+      800: '#075985',
+      900: '#0c4a6e',
+    },
+    accent: {
+      50: '#faf5ff',
+      100: '#f3e8ff',
+      200: '#e9d5ff',
+      300: '#d8b4fe',
+      400: '#c084fc',
+      500: '#a855f7',
+      600: '#9333ea',
+      700: '#7c3aed',
+      800: '#6b21a8',
+      900: '#581c87',
+    },
+    success: {
+      50: '#f0fdf4',
+      100: '#dcfce7',
+      200: '#bbf7d0',
+      300: '#86efac',
+      400: '#4ade80',
+      500: '#22c55e',
+      600: '#16a34a',
+      700: '#15803d',
+      800: '#166534',
+      900: '#14532d',
+    },
+    warning: {
+      50: '#fffbeb',
+      100: '#fef3c7',
+      200: '#fde68a',
+      300: '#fcd34d',
+      400: '#fbbf24',
+      500: '#f59e0b',
+      600: '#d97706',
+      700: '#b45309',
+      800: '#92400e',
+      900: '#78350f',
+    },
+    error: {
+      50: '#fef2f2',
+      100: '#fee2e2',
+      200: '#fecaca',
+      300: '#fca5a5',
+      400: '#f87171',
+      500: '#ef4444',
+      600: '#dc2626',
+      700: '#b91c1c',
+      800: '#991b1b',
+      900: '#7f1d1d',
+    },
+  },
+  gradients: {
+    subtle: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    brand: 'linear-gradient(135deg, #0ea5e9 0%, #7c3aed 100%)',
+    success: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+    glass: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
   },
   styles: {
     global: (props: StyleFunctionProps) => ({
       body: {
-        bg: props.colorMode === 'dark' ? 'gray.900' : 'github.bgPrimary',
-        color: props.colorMode === 'dark' ? 'white' : 'github.textPrimary',
+        bg: props.colorMode === 'dark' ? 'neutral.900' : 'neutral.50',
+        color: props.colorMode === 'dark' ? 'neutral.100' : 'neutral.900',
+        transition: 'all 0.3s ease-in-out',
+      },
+      '*': {
+        transition: 'color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out',
       },
     }),
   },
   components: {
     Button: {
-      defaultProps: {
-        colorScheme: 'blue',
+      baseStyle: {
+        fontWeight: '500',
+        borderRadius: 'md',
+        transition: 'all 0.2s ease-in-out',
+        _focus: {
+          boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.15)',
+        },
+        _active: {
+          transform: 'translateY(1px)',
+        },
+      },
+      variants: {
+        gradient: {
+          bg: 'gradients.brand',
+          color: 'white',
+          _hover: {
+            bg: 'gradients.brand',
+            transform: 'translateY(-2px)',
+            boxShadow: 'lg',
+          },
+        },
+        glass: {
+          bg: 'gradients.glass',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          color: 'white',
+          _hover: {
+            bg: 'rgba(255, 255, 255, 0.2)',
+            transform: 'translateY(-2px)',
+          },
+        },
       },
     },
     Card: {
       baseStyle: {
         container: {
-          bg: 'github.bgSecondary',
-          borderColor: 'github.border',
-          borderWidth: '1px',
-          borderRadius: '6px',
+          bg: 'white',
+          borderRadius: 'xl',
           boxShadow: 'sm',
+          transition: 'all 0.3s ease-in-out',
+          _hover: {
+            boxShadow: 'lg',
+            transform: 'translateY(-4px)',
+          },
+          overflow: 'hidden',
         },
       },
     },
     Input: {
-      defaultProps: {
-        focusBorderColor: 'github.accent',
+      baseStyle: {
+        field: {
+          borderRadius: 'lg',
+          transition: 'all 0.2s ease-in-out',
+          _focus: {
+            boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.15)',
+          },
+        },
       },
     },
+    Heading: {
+      baseStyle: {
+        fontWeight: '600',
+        letterSpacing: '-0.02em',
+      },
+    },
+  },
+  config: {
+    initialColorMode: 'light',
+    useSystemColorMode: false,
   },
 })
 
