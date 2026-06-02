@@ -67,8 +67,9 @@ function App() {
 
   const paginationInfo = calculatePagination(page, totalResults, RESULTS_PER_PAGE)
 
-  const textColor = useColorModeValue('neutral.800', 'neutral.200')
-  const subtitleColor = useColorModeValue('neutral.600', 'neutral.400')
+  const textColor = useColorModeValue('neutral.800', 'dark.text.primary')
+  const subtitleColor = useColorModeValue('neutral.600', 'dark.text.secondary')
+  const titleGradient = useColorModeValue('linear(to-r, brand.500, accent.500)', 'linear(to-r, brand.400, accent.400)')
 
   return (
     <>
@@ -91,12 +92,12 @@ function App() {
                     size="2xl"
                     color={textColor}
                     textAlign="center"
-                    bgGradient="linear(to-r, brand.500, accent.500)"
+                    bgGradient={titleGradient}
                     bgClip="text"
                     fontWeight="700"
                     letterSpacing="-0.02em"
                   >
-                    Search GitHub Users
+                    GitHub Users Search
                   </Heading>
                 </motion.div>
                 <motion.div

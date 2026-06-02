@@ -4,10 +4,7 @@ import {
   useColorModeValue,
   useColorMode,
   Tooltip,
-  HStack,
-  Text,
   Circle,
-  Box,
 } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
@@ -24,11 +21,12 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   const { colorMode, toggleColorMode } = useColorMode()
   const isDark = colorMode === 'dark'
   
-  const iconColor = useColorModeValue('neutral.600', 'neutral.400')
-  const hoverBg = useColorModeValue('neutral.100', 'neutral.700')
-  const activeBg = useColorModeValue('brand.500', 'brand.400')
-  const switchBg = useColorModeValue('neutral.300', 'neutral.600')
+  const iconColor = useColorModeValue('neutral.600', 'dark.text.tertiary')
+  const hoverBg = useColorModeValue('neutral.100', 'dark.bg.tertiary')
+  const switchBg = useColorModeValue('neutral.300', 'dark.border.accent')
   const switchActiveBg = useColorModeValue('brand.500', 'brand.400')
+  const defaultButtonBg = useColorModeValue('white', 'dark.bg.secondary')
+  const defaultButtonBorder = useColorModeValue('neutral.200', 'dark.border.primary')
 
   const sizeMap = {
     xs: { boxSize: 4, padding: 1, fontSize: 'xs' },
@@ -55,9 +53,9 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
             onClick={toggleColorMode}
             variant="ghost"
             size={size}
-            bg={useColorModeValue('white', 'neutral.800')}
+            bg={defaultButtonBg}
             border="1px solid"
-            borderColor={useColorModeValue('neutral.200', 'neutral.700')}
+            borderColor={defaultButtonBorder}
             borderRadius="lg"
             _hover={{
               bg: hoverBg,

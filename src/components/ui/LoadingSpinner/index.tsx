@@ -1,17 +1,15 @@
 import React from 'react'
 import {
   Spinner,
-  Box,
   Text,
   VStack,
   HStack,
   Circle,
   useColorModeValue,
-  Flex,
-  Icon
+  Flex
 } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { GitHubSearchIcon } from '@/components/ui/GitHubSearchIcon'
 
 interface LoadingSpinnerProps {
   message?: string
@@ -24,8 +22,8 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'md',
   variant = 'default',
 }) => {
-  const textColor = useColorModeValue('neutral.700', 'neutral.300')
-  const mutedTextColor = useColorModeValue('neutral.500', 'neutral.400')
+  const textColor = useColorModeValue('neutral.700', 'dark.text.primary')
+  const mutedTextColor = useColorModeValue('neutral.500', 'dark.text.tertiary')
   const accentColor = useColorModeValue('brand.500', 'brand.400')
   const dotColor = useColorModeValue('brand.300', 'brand.600')
 
@@ -119,8 +117,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         ease: "linear"
       }}
     >
-      <Icon
-        as={ExternalLinkIcon}
+      <GitHubSearchIcon
         boxSize={currentSize.box}
         color={accentColor}
       />

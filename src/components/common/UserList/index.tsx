@@ -12,7 +12,7 @@ import {
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { GitHubUser } from '@/utils/types'
 import { UserCard } from '@/components/common/UserCard'
-import { SearchIcon, PersonIcon } from '@chakra-ui/icons'
+import { SearchIcon, WarningIcon } from '@chakra-ui/icons'
 
 interface UserListProps {
   users: GitHubUser[]
@@ -25,7 +25,7 @@ export const UserList: React.FC<UserListProps> = ({
   loading = false,
   error = null,
 }) => {
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement>(null) as any
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   
   const containerVariants = {
@@ -64,9 +64,12 @@ export const UserList: React.FC<UserListProps> = ({
     }
   }
 
-  const textColor = useColorModeValue('neutral.800', 'neutral.200')
-  const mutedTextColor = useColorModeValue('neutral.600', 'neutral.400')
-  const emptyStateBg = useColorModeValue('neutral.50', 'neutral.800')
+  const textColor = useColorModeValue('neutral.800', 'dark.text.primary')
+  const mutedTextColor = useColorModeValue('neutral.600', 'dark.text.secondary')
+  const emptyStateBg = useColorModeValue('neutral.50', 'dark.bg.tertiary')
+  const skeletonBg = useColorModeValue('neutral.200', 'dark.border.primary')
+  const emptyStateBorder = useColorModeValue('neutral.200', 'dark.border.primary')
+
 
   // Loading skeleton component
   const LoadingSkeleton = () => (
@@ -77,10 +80,10 @@ export const UserList: React.FC<UserListProps> = ({
       style={{ width: '100%' }}
     >
       <Box
-        bg="white"
+        bg={useColorModeValue('white', 'dark.bg.secondary')}
         borderRadius="2xl"
         borderWidth="1px"
-        borderColor="neutral.200"
+        borderColor={useColorModeValue('neutral.200', 'dark.border.primary')}
         p={6}
         height="420px"
         display="flex"
@@ -91,73 +94,88 @@ export const UserList: React.FC<UserListProps> = ({
           <Box
             boxSize="90px"
             borderRadius="full"
-            bg="neutral.200"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            bg={skeletonBg}
+            style={{
+              animation: 'pulse 1.5s ease-in-out infinite',
+            }}
           />
           <VStack spacing={2} width="100%">
             <Box
               h="24px"
-              bg="neutral.200"
+              bg={skeletonBg}
               borderRadius="md"
               width="80%"
               mx="auto"
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.5, repeat: Infinity, delay: 0.2 }}
+              style={{
+                animation: 'pulse 1.5s ease-in-out infinite',
+                animationDelay: '0.2s',
+              }}
             />
             <Box
               h="16px"
-              bg="neutral.200"
+              bg={skeletonBg}
               borderRadius="md"
               width="60%"
               mx="auto"
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.5, repeat: Infinity, delay: 0.4 }}
+              style={{
+                animation: 'pulse 1.5s ease-in-out infinite',
+                animationDelay: '0.4s',
+              }}
             />
           </VStack>
         </VStack>
         <VStack spacing={3} align="start" flex={1} width="100%">
           <Box
             h="14px"
-            bg="neutral.200"
+            bg={skeletonBg}
             borderRadius="md"
             width="100%"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 1.5, repeat: Infinity, delay: 0.6 }}
+            style={{
+              animation: 'pulse 1.5s ease-in-out infinite',
+              animationDelay: '0.6s',
+            }}
           />
           <Box
             h="14px"
-            bg="neutral.200"
+            bg={skeletonBg}
             borderRadius="md"
             width="80%"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 1.5, repeat: Infinity, delay: 0.8 }}
+            style={{
+              animation: 'pulse 1.5s ease-in-out infinite',
+              animationDelay: '0.8s',
+            }}
           />
           <Box flex={1} />
           <HStack spacing={2} width="100%">
             <Box
               h="32px"
-              bg="neutral.200"
+              bg={skeletonBg}
               borderRadius="lg"
               flex={1}
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.5, repeat: Infinity, delay: 1.0 }}
+              style={{
+                animation: 'pulse 1.5s ease-in-out infinite',
+                animationDelay: '1.0s',
+              }}
             />
             <Box
               h="32px"
-              bg="neutral.200"
+              bg={skeletonBg}
               borderRadius="lg"
               flex={1}
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.5, repeat: Infinity, delay: 1.2 }}
+              style={{
+                animation: 'pulse 1.5s ease-in-out infinite',
+                animationDelay: '1.2s',
+              }}
             />
             <Box
               h="32px"
-              bg="neutral.200"
+              bg={skeletonBg}
               borderRadius="lg"
               flex={1}
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.5, repeat: Infinity, delay: 1.4 }}
+              style={{
+                animation: 'pulse 1.5s ease-in-out infinite',
+                animationDelay: '1.4s',
+              }}
             />
           </HStack>
         </VStack>
@@ -178,7 +196,7 @@ export const UserList: React.FC<UserListProps> = ({
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
             >
-              <Icon as={SearchIcon} boxSize={12} color="brand.500" />
+              <Icon as={SearchIcon} boxSize={12} color={useColorModeValue('brand.500', 'brand.400')} />
             </motion.div>
             <Text fontSize="lg" color={textColor} fontWeight="500">
               Searching for amazing developers...
@@ -191,7 +209,7 @@ export const UserList: React.FC<UserListProps> = ({
           <SimpleGrid
             columns={{ base: 1, sm: 2, lg: 3, xl: 4 }}
             spacing={6}
-            align="stretch"
+            alignItems="stretch"
             autoRows="1fr"
           >
             {[...Array(8)].map((_, index) => (
@@ -219,10 +237,10 @@ export const UserList: React.FC<UserListProps> = ({
           bg={emptyStateBg}
           borderRadius="2xl"
           borderWidth="1px"
-          borderColor="neutral.200"
+          borderColor={emptyStateBorder}
         >
           <VStack spacing={4} textAlign="center">
-            <Icon as={UserIcon} boxSize={16} color="error.500" />
+            <Icon as={WarningIcon} boxSize={16} color={useColorModeValue('error.500', 'error.400')} />
             <VStack spacing={2}>
               <Text fontSize="xl" color={textColor} fontWeight="600">
                 Oops! Something went wrong
@@ -253,7 +271,7 @@ export const UserList: React.FC<UserListProps> = ({
           bg={emptyStateBg}
           borderRadius="2xl"
           borderWidth="1px"
-          borderColor="neutral.200"
+          borderColor={emptyStateBorder}
         >
           <VStack spacing={6} textAlign="center">
             <motion.div
@@ -267,7 +285,7 @@ export const UserList: React.FC<UserListProps> = ({
                 ease: "easeInOut"
               }}
             >
-              <Icon as={SearchIcon} boxSize={16} color="brand.500" />
+              <Icon as={SearchIcon} boxSize={16} color={useColorModeValue('brand.500', 'brand.400')} />
             </motion.div>
             <VStack spacing={2}>
               <Text fontSize="xl" color={textColor} fontWeight="600">
@@ -301,7 +319,7 @@ export const UserList: React.FC<UserListProps> = ({
           '2xl': 5
         }}
         spacing={6}
-        align="stretch"
+        alignItems="stretch"
         autoRows="1fr"
       >
         <AnimatePresence mode="popLayout">
@@ -332,7 +350,7 @@ export const UserList: React.FC<UserListProps> = ({
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
               >
-                <Icon as={SearchIcon} boxSize={8} color="brand.500" />
+                <Icon as={SearchIcon} boxSize={8} color={useColorModeValue('brand.500', 'brand.400')} />
               </motion.div>
               <Text fontSize="sm" color={mutedTextColor}>
                 Loading more users...

@@ -8,23 +8,31 @@ import {
   Flex,
   HStack,
   Text,
-  Icon,
   Hide,
 } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { GitHubSearchIcon } from '@/components/ui/GitHubSearchIcon'
 
 interface LayoutProps {
   children: React.ReactNode
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const bg = useColorModeValue('neutral.50', 'neutral.900')
-  const headerBg = useColorModeValue('white', 'neutral.800')
-  const borderColor = useColorModeValue('neutral.200', 'neutral.700')
-  const textColor = useColorModeValue('neutral.800', 'neutral.200')
-  const subtitleColor = useColorModeValue('neutral.600', 'neutral.400')
+  const bg = useColorModeValue('neutral.50', 'dark.bg.primary')
+  const headerBg = useColorModeValue('white', 'dark.bg.secondary')
+  const borderColor = useColorModeValue('neutral.200', 'dark.border.primary')
+  const subtitleColor = useColorModeValue('neutral.600', 'dark.text.secondary')
+  const gradientDecoration = useColorModeValue('linear(to-b, brand.50, transparent)', 'linear(to-b, dark.bg.primary, transparent)')
+  const gradientOpacity = useColorModeValue(0.5, 0.3)
+  const titleGradient = useColorModeValue('linear(to-r, brand.500, accent.500)', 'linear(to-r, brand.400, accent.400)')
+  const contentBg = useColorModeValue('white', 'dark.bg.secondary')
+  const contentShadow = useColorModeValue('md', 'dark.lg')
+  const bgPattern = useColorModeValue(
+    'radial-gradient(circle at 1px 1px, neutral.200 1px, transparent 1px)',
+    'radial-gradient(circle at 1px 1px, dark.border.primary 1px, transparent 1px)'
+  )
+  const bgPatternOpacity = useColorModeValue(0.3, 0.1)
 
   return (
     <Box minH="100vh" bg={bg} position="relative" overflow="hidden">
@@ -35,8 +43,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         left="0"
         right="0"
         h="400px"
-        bgGradient="linear(to-b, brand.50, transparent)"
-        opacity={0.5}
+        bgGradient={gradientDecoration}
+        opacity={gradientOpacity}
         zIndex={0}
       />
       
@@ -79,8 +87,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6, ease: 'easeInOut' }}
                 >
-                  <Icon
-                    as={ExternalLinkIcon}
+                  <GitHubSearchIcon
                     w={{ base: 8, sm: 9, md: 10 }}
                     h={{ base: 8, sm: 9, md: 10 }}
                     color="brand.500"
@@ -89,7 +96,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <VStack align="start" spacing={1} flex={1}>
                   <Heading
                     size={{ base: "md", sm: "lg", md: "lg" }}
-                    bgGradient="linear(to-r, brand.500, accent.500)"
+                    bgGradient={titleGradient}
                     bgClip="text"
                     fontWeight="700"
                     letterSpacing="-0.02em"
@@ -103,7 +110,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                       color={subtitleColor}
                       fontWeight="500"
                     >
-                      Discover developers, explore profiles
+                      Discover and explore GitHub profiles
                     </Text>
                   </Hide>
                 </VStack>
@@ -123,13 +130,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
-            width="100%"
+            style={{ width: '100%' }}
           >
             <Box
               borderRadius={{ base: "xl", sm: "2xl" }}
               p={{ base: 4, sm: 6, md: 8 }}
-              bg={useColorModeValue('white', 'neutral.800')}
-              boxShadow="md"
+              bg={contentBg}
+              boxShadow={contentShadow}
               border="1px solid"
               borderColor={borderColor}
               backdropFilter="blur(10px)"
@@ -144,9 +151,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 left="0"
                 right="0"
                 bottom="0"
-                bgImage="radial-gradient(circle at 1px 1px, neutral.200 1px, transparent 1px)"
+                bgImage={bgPattern}
                 bgSize="20px 20px"
-                opacity={0.3}
+                opacity={bgPatternOpacity}
                 pointerEvents="none"
               />
               
@@ -173,7 +180,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               textAlign="center"
             >
               <Text>
-                Built with ❤️ using React, Chakra UI & Framer Motion
+                Built with ❤️ using React, Chakra UI & Framer Motion 🐻🧉
               </Text>
             </Flex>
           </motion.div>

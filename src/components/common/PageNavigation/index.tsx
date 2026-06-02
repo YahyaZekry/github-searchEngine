@@ -31,12 +31,12 @@ export const PageNavigation: React.FC<PageNavigationProps> = ({
   onPageChange,
   isLoading = false,
 }) => {
-  const textColor = useColorModeValue('neutral.800', 'neutral.200')
-  const mutedTextColor = useColorModeValue('neutral.600', 'neutral.400')
-  const buttonBg = useColorModeValue('white', 'neutral.800')
-  const buttonBorder = useColorModeValue('neutral.300', 'neutral.600')
+  const textColor = useColorModeValue('neutral.800', 'dark.text.primary')
+  const mutedTextColor = useColorModeValue('neutral.600', 'dark.text.secondary')
+  const buttonBg = useColorModeValue('white', 'dark.bg.secondary')
+  const buttonBorder = useColorModeValue('neutral.300', 'dark.border.primary')
   const activeBg = useColorModeValue('brand.500', 'brand.400')
-  const progressColor = useColorModeValue('brand.500', 'brand.400')
+  const progressBarBg = useColorModeValue('neutral.200', 'dark.border.primary')
 
   const handlePrevious = () => {
     if (hasPreviousPage && !isLoading) {
@@ -87,7 +87,7 @@ export const PageNavigation: React.FC<PageNavigationProps> = ({
   }: {
     onClick: () => void
     isDisabled: boolean
-    icon: React.ReactNode
+    icon: React.ReactElement
     label: string
     children?: React.ReactNode
   }) => (
@@ -161,7 +161,7 @@ export const PageNavigation: React.FC<PageNavigationProps> = ({
               size="sm"
               colorScheme="brand"
               borderRadius="full"
-              bg={useColorModeValue('neutral.200', 'neutral.700')}
+              bg={progressBarBg}
               transition="all 0.3s ease-in-out"
             />
           </VStack>

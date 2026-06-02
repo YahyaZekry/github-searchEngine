@@ -9,8 +9,6 @@ import {
   InputRightElement,
   Text,
   HStack,
-  Fade,
-  ScaleFade,
   FormErrorMessage,
   FormHelperText,
 } from '@chakra-ui/react'
@@ -88,27 +86,34 @@ export const SearchForm: React.FC<SearchFormProps> = ({
     setValidationMessage('')
   }
 
-  const inputBg = useColorModeValue('white', 'neutral.800')
-  const inputBorder = useColorModeValue('neutral.300', 'neutral.600')
+  const inputBg = useColorModeValue('white', 'dark.bg.secondary')
+  const inputBorder = useColorModeValue('neutral.300', 'dark.border.primary')
   const errorBorder = useColorModeValue('error.500', 'error.400')
   const focusBorderColor = useColorModeValue('brand.500', 'brand.400')
-  const placeholderColor = useColorModeValue('neutral.500', 'neutral.400')
-  const iconColor = useColorModeValue('neutral.400', 'neutral.500')
+  const placeholderColor = useColorModeValue('neutral.500', 'dark.text.tertiary')
+  const iconColor = useColorModeValue('neutral.400', 'dark.text.tertiary')
   const errorColor = useColorModeValue('error.600', 'error.400')
+  const clearButtonHoverBg = useColorModeValue('neutral.100', 'dark.bg.tertiary')
+  const clearButtonHoverColor = useColorModeValue('neutral.600', 'dark.text.secondary')
 
   const shouldShowError = !isValid || error
 
   return (
     <Box as="form" onSubmit={handleSubmit} width="100%" position="relative">
-      <FormControl isInvalid={shouldShowError}>
+      <FormControl isInvalid={shouldShowError ? true : false}>
         <motion.div
           initial={{ scale: 1 }}
           whileFocus={{ scale: 1.02 }}
           animate={{
-            borderColor: shouldShowError ? errorBorder : inputBorder,
-            boxShadow: shouldShowError ? `0 0 0 3px rgba(239, 68, 68, 0.15)` : 'none'
+            scale: shouldShowError ? 1.01 : 1,
+            boxShadow: shouldShowError
+              ? `0 0 0 3px rgba(239, 68, 68, 0.15)`
+              : '0 0 0 0px rgba(0, 0, 0, 0)'
           }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
+          style={{
+            borderColor: shouldShowError ? errorBorder : inputBorder,
+          }}
         >
           <InputGroup>
             <Input
@@ -160,8 +165,8 @@ export const SearchForm: React.FC<SearchFormProps> = ({
                       p={1}
                       color={iconColor}
                       _hover={{
-                        bg: 'neutral.100',
-                        color: 'neutral.600',
+                        bg: clearButtonHoverBg,
+                        color: clearButtonHoverColor,
                       }}
                     >
                       <CloseIcon boxSize={3} />

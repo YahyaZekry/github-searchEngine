@@ -33,15 +33,21 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index }) => {
   const [detailedUser, setDetailedUser] = useState<GitHubUser | null>(null)
   const [loading, setLoading] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
-  const ref = React.useRef(null)
+  const ref = React.useRef<HTMLDivElement>(null) as any
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   
-  const cardBg = useColorModeValue('white', 'neutral.800')
-  const textColor = useColorModeValue('neutral.800', 'neutral.200')
-  const borderColor = useColorModeValue('neutral.200', 'neutral.700')
-  const mutedTextColor = useColorModeValue('neutral.600', 'neutral.400')
+  const cardBg = useColorModeValue('white', 'dark.bg.secondary')
+  const textColor = useColorModeValue('neutral.800', 'dark.text.primary')
+  const borderColor = useColorModeValue('neutral.200', 'dark.border.primary')
+  const mutedTextColor = useColorModeValue('neutral.600', 'dark.text.tertiary')
   const accentColor = useColorModeValue('brand.500', 'brand.400')
-  const gradientBg = useColorModeValue('linear-gradient(135deg, brand.50, accent.50)', 'linear-gradient(135deg, neutral.800, neutral.700)')
+  const gradientBg = useColorModeValue('linear-gradient(135deg, brand.50, accent.50)', 'linear-gradient(135deg, dark.bg.secondary, dark.bg.tertiary)')
+  const reposBadgeBg = useColorModeValue('brand.50', 'brand.900')
+  const reposBadgeColor = useColorModeValue('brand.700', 'brand.200')
+  const followersBadgeBg = useColorModeValue('accent.50', 'accent.900')
+  const followersBadgeColor = useColorModeValue('accent.700', 'accent.200')
+  const followingBadgeBg = useColorModeValue('success.50', 'success.900')
+  const followingBadgeColor = useColorModeValue('success.700', 'success.200')
 
   // Fetch detailed user information when component mounts
   useEffect(() => {
@@ -161,7 +167,7 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index }) => {
                   objectFit="cover"
                   boxShadow="md"
                 />
-                {displayUser.site_admin && (
+                {(displayUser as any).site_admin && (
                   <Box
                     position="absolute"
                     bottom="0"
@@ -250,7 +256,7 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index }) => {
               )}
               
               
-              {displayUser.blog && (
+              {(displayUser as any).blog && (
                 <HStack spacing={2}>
                   <Icon as={TimeIcon} color={mutedTextColor} boxSize={4} />
                   <Text
@@ -259,7 +265,7 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index }) => {
                     noOfLines={1}
                     isTruncated
                   >
-                    {displayUser.blog}
+                    {(displayUser as any).blog}
                   </Text>
                 </HStack>
               )}
@@ -282,8 +288,8 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index }) => {
                   <HStack justify="space-between" width="100%">
                     <Tooltip label="Public repositories">
                       <Badge
-                        bg="brand.50"
-                        color="brand.700"
+                        bg={reposBadgeBg}
+                        color={reposBadgeColor}
                         px={3}
                         py={1.5}
                         borderRadius="lg"
@@ -302,8 +308,8 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index }) => {
                     
                     <Tooltip label="Followers">
                       <Badge
-                        bg="accent.50"
-                        color="accent.700"
+                        bg={followersBadgeBg}
+                        color={followersBadgeColor}
                         px={3}
                         py={1.5}
                         borderRadius="lg"
@@ -322,8 +328,8 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index }) => {
                     
                     <Tooltip label="Following">
                       <Badge
-                        bg="success.50"
-                        color="success.700"
+                        bg={followingBadgeBg}
+                        color={followingBadgeColor}
                         px={3}
                         py={1.5}
                         borderRadius="lg"

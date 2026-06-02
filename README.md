@@ -1,73 +1,139 @@
-# React + TypeScript + Vite
+# GitHub Users Search
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern GitHub users search application with a clean, responsive interface, built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **GitHub User Search**: Search for GitHub users by username with real-time results
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Dark/Light Mode**: Toggle between light and dark themes with smooth transitions
+- **Pagination**: Navigate through search results with intuitive pagination controls
+- **Error Handling**: Graceful error handling with user-friendly error messages
+- **Loading States**: Beautiful loading animations while fetching data
+- **Modern UI**: Built with Chakra UI for a polished, accessible interface
+- **Smooth Animations**: Delightful micro-interactions using Framer Motion
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 19** - Modern React with latest features
+- **TypeScript** - Type-safe development
+- **Vite** - Fast build tool and development server
+- **Chakra UI** - Component library for modern UI design
+- **Framer Motion** - Animation library for smooth transitions
+- **Axios** - HTTP client for API requests
+- **Vitest** - Testing framework
+- **ESLint** - Code linting and formatting
 
-## Expanding the ESLint configuration
+## 🚀 Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js (v18 or higher)
+- npm or yarn
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone the repository:
+```bash
+git clone https://github.com/yahyazekry/github-users.git
+cd github-users
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Install dependencies:
+```bash
+npm install
 ```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+4. Open your browser and navigate to `http://localhost:5173`
+
+## Usage
+
+1. **Search for Users**: Type a GitHub username in the search box
+2. **Browse Results**: View user profiles with avatar, username, and profile link
+3. **Navigate Pages**: Use pagination controls to explore more results
+4. **Toggle Theme**: Switch between light and dark modes using the theme toggle
+
+## 🧪 Testing
+
+Run the test suite:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with UI
+npm run test:ui
+
+# Generate coverage report
+npm run test:coverage
+```
+
+## 🏗️ Project Structure
+
+```
+src/
+├── components/
+│   ├── common/          # Reusable components
+│   │   ├── SearchForm/  # Search input component
+│   │   ├── UserCard/    # User profile card
+│   │   ├── UserList/    # List of users
+│   │   └── PageNavigation/ # Pagination controls
+│   ├── layout/          # Layout components
+│   │   └── Layout/      # Main app layout
+│   └── ui/              # UI components
+│       ├── ErrorMessage/ # Error display
+│       ├── LoadingSpinner/ # Loading animation
+│       └── ThemeToggle/  # Theme switcher
+├── hooks/               # Custom React hooks
+│   ├── useGitHubSearch.ts # GitHub API logic
+│   ├── useDebounce.ts   # Debounce hook
+│   └── useTheme.ts      # Theme management
+├── services/            # API services
+│   ├── githubApi.ts     # GitHub API client
+│   └── api.ts           # API configuration
+├── styles/              # Styling
+│   └── theme/           # Chakra UI theme
+└── utils/               # Utility functions
+    ├── constants.ts      # App constants
+    ├── helpers.ts       # Helper functions
+    └── types.ts         # TypeScript types
+```
+
+## Technologies Used
+
+- **React 19**: Modern React with the latest features
+- **TypeScript**: Type-safe development
+- **Vite**: Fast build tool and development server
+- **Chakra UI**: Component library for responsive design
+- **Framer Motion**: Animation library for smooth interactions
+- **Axios**: HTTP client for API requests
+
+## 🌐 Deployment
+
+The application is deployed at: https://yahyazekry.github.io/github-searchEngine
+
+To deploy to GitHub Pages:
+
+```bash
+npm run build
+npm run deploy
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## Acknowledgments
+
+- GitHub for the amazing API
+- Chakra UI for the excellent component library
+- Framer Motion for the smooth animations

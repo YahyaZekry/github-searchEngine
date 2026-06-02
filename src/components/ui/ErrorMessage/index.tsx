@@ -7,7 +7,6 @@ import {
   Button,
   VStack,
   HStack,
-  Box,
   Text,
   useColorModeValue,
   Icon,
@@ -34,8 +33,9 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
   const errorBorder = useColorModeValue('error.200', 'error.700')
   const errorColor = useColorModeValue('error.700', 'error.200')
   const errorIconColor = useColorModeValue('error.500', 'error.400')
-  const textColor = useColorModeValue('neutral.800', 'neutral.200')
-  const mutedTextColor = useColorModeValue('neutral.600', 'neutral.400')
+  const textColor = useColorModeValue('neutral.800', 'dark.text.primary')
+  const mutedTextColor = useColorModeValue('neutral.600', 'dark.text.secondary')
+  const retryButtonHoverBg = useColorModeValue('error.100', 'error.800')
 
   // Card variant for full-page errors
   if (variant === 'card') {
@@ -149,7 +149,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
               variant="ghost"
               color={errorColor}
               onClick={onRetry}
-              _hover={{ bg: 'error.100' }}
+              _hover={{ bg: retryButtonHoverBg }}
             >
               <Icon as={RepeatIcon} boxSize={4} />
             </Button>
