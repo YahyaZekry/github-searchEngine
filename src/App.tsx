@@ -17,7 +17,6 @@ import { PageNavigation } from '@/components/common/PageNavigation'
 import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { useGitHubSearch } from '@/hooks/useGitHubSearch'
-import { useDebounce } from '@/hooks/useDebounce'
 import { RESULTS_PER_PAGE } from '@/utils/constants'
 import { calculatePagination } from '@/utils/helpers'
 
@@ -46,13 +45,6 @@ function App() {
     setUsername,
     setPage,
   } = useGitHubSearch()
-
-  const debouncedUsername = useDebounce(username, 300)
-
-  // Update search hook with debounced username
-  React.useEffect(() => {
-    setUsername(debouncedUsername)
-  }, [debouncedUsername, setUsername])
 
   const handleSearch = () => {
     if (username.trim()) {
@@ -158,6 +150,24 @@ function App() {
                     onRetry={handleSearch}
                     title="Search Error"
                   />
+                </motion.div>
+              ) : !username.trim() && results.length === 0 ? (
+                <motion.div
+                  key="welcome"
+                  variants={pageVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  transition={pageTransition}
+                >
+                  <VStack py={20} spacing={4} textAlign="center">
+                    <Text fontSize="xl" color={textColor} fontWeight="600">
+                      Welcome to GitHub Search!
+                    </Text>
+                    <Text color={subtitleColor} maxW="400px">
+                      Enter a username above to start exploring GitHub profiles and developers.
+                    </Text>
+                  </VStack>
                 </motion.div>
               ) : (
                 <motion.div
